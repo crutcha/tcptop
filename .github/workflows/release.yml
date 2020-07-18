@@ -1,0 +1,39 @@
+on:
+  release:
+    types: [published]
+
+name: release
+
+jobs:
+  release-linux-x64:
+    name: release linux
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          target: x86_64-unknown-linux-musl
+          toolchain: stable
+          override: true
+      - name: Checking out sources
+        uses: actions/checkout@v1
+      - name: Running cargo build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          toolchain: stable
+          args: --release --target x86_64-unknown-linux-musl
+      - name: Create binary tarball 
+        shell: bash
+        run: |
+          cd target/x86_64-unknown-linux-musl/release
+          tar zcvf nettop-linux-x64.tar.gz nettop-rs
+      - name: Releasing assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            target/x86_64-unknown-linux-musl/release/nettop-linux-x64.tar.gz
+            target/x86_64-unknown-linux-musl/release/nettop-linux-x64.tar.sha256
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
