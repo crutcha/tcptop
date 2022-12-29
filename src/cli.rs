@@ -2,7 +2,7 @@ use crate::table;
 use tui::layout::{Constraint, Layout, Direction, Rect};
 use tui::style::{Color, Modifier, Style};
 use tui::widgets::{Row, Table, Block, Borders, Chart, Dataset, Axis, GraphType, Paragraph, Wrap};
-use tui::text::{Spans, Span};
+use tui::text::{Spans, Span, Text};
 use tui::terminal::Frame;
 use tui::backend::Backend;
 use tui::symbols;
@@ -161,40 +161,68 @@ impl<'a> CLI<'a> {
             Span::styled((chart_bounds_window[1]/2.0).to_string(), Style::default().add_modifier(Modifier::ITALIC)),
             Span::styled(chart_bounds_window[1].to_string(), Style::default().add_modifier(Modifier::ITALIC)),
         ];
-        let text = Spans::from(vec![
+
+        // theres gotta be a better way....
+        let mut text = Text::from(Spans::from(vec![
             Span::styled("Src: ", Style::default().add_modifier(Modifier::BOLD)),
             Span::raw(format!("{}:{}\n", detail_entry.src.ip().to_string(), detail_entry.src.port().to_string())),
+        ]));
+        text.extend(Text::from(Spans::from(vec![
             Span::styled("Dst: ", Style::default().add_modifier(Modifier::BOLD)),
             Span::raw(format!("{}:{}\n", detail_entry.dst.ip().to_string(), detail_entry.dst.port().to_string())),
+        ])));
+        text.extend(Text::from(Spans::from(vec![
             Span::styled("Inode: ", Style::default().add_modifier(Modifier::BOLD)),
             Span::raw(format!("{}\n", detail_entry.inode)),
+        ])));
+        text.extend(Text::from(Spans::from(vec![
             Span::styled("Retransmits: ", Style::default().add_modifier(Modifier::BOLD)),
             Span::raw(format!("{}\n", tcp_info.tcpi_total_retrans)),
+        ])));
+        text.extend(Text::from(Spans::from(vec![
             Span::styled("RTO: ", Style::default().add_modifier(Modifier::BOLD)),
             Span::raw(format!("{}\n", tcp_info.tcpi_rto)),
+        ])));
+        text.extend(Text::from(Spans::from(vec![
             Span::styled("ATO: ", Style::default().add_modifier(Modifier::BOLD)),
             Span::raw(format!("{}\n", tcp_info.tcpi_ato)),
+        ])));
+        text.extend(Text::from(Spans::from(vec![
             Span::styled("Send MSS: ", Style::default().add_modifier(Modifier::BOLD)),
             Span::raw(format!("{}\n", tcp_info.tcpi_snd_mss)),
+        ])));
+        text.extend(Text::from(Spans::from(vec![
             Span::styled("Recv Mss: ", Style::default().add_modifier(Modifier::BOLD)),
             Span::raw(format!("{}\n", tcp_info.tcpi_rcv_mss)),
+        ])));
+        text.extend(Text::from(Spans::from(vec![
             Span::styled("Lost: ", Style::default().add_modifier(Modifier::BOLD)),
             Span::raw(format!("{}\n", tcp_info.tcpi_lost)),
+        ])));
+        text.extend(Text::from(Spans::from(vec![
             Span::styled("RTT: ", Style::default().add_modifier(Modifier::BOLD)),
             Span::raw(format!("{}\n", tcp_info.tcpi_rtt)),
+        ])));
+        text.extend(Text::from(Spans::from(vec![
             Span::styled("RTT variance: ", Style::default().add_modifier(Modifier::BOLD)),
             Span::raw(format!("{}\n", tcp_info.tcpi_rttvar)),
+        ])));
+        text.extend(Text::from(Spans::from(vec![
             Span::styled("Congestion window: ", Style::default().add_modifier(Modifier::BOLD)),
             Span::raw(format!("{}\n", tcp_info.tcpi_snd_cwnd)),
+        ])));
+        text.extend(Text::from(Spans::from(vec![
             Span::styled("Pacing rate: ", Style::default().add_modifier(Modifier::BOLD)),
             Span::raw(format!("{}\n", tcp_info.tcpi_pacing_rate)),
-        ]);
+        ])));
+
         let block = Block::default()
             .borders(Borders::ALL)
             .title("Socket Info")
             .title_style(Style::default().fg(Color::Magenta).add_modifier(Modifier::BOLD));
         let paragraph = Paragraph::new(text)
             .block(block)
+            // HERE
             .wrap(Wrap{trim: true});
         let window_dataset = vec![Dataset::default()
             .name("data")
