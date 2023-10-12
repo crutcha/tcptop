@@ -8,7 +8,7 @@ edition = "2018"
 
 [dependencies]
 nell = "0.3.0"
-tui = "0.13"
+tui = { version = "0.19", features = ["termion"] }
 termion = "1.5.5"
 rand = "0.7.3"
 trust-dns-resolver = "0.19.5"

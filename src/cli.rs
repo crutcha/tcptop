@@ -7,6 +7,7 @@ use tui::terminal::Frame;
 use tui::backend::Backend;
 use tui::symbols;
 use std::collections::VecDeque;
+use std::iter::FromIterator;
 
 
 fn vecdequeue_as_chart(rate: &VecDeque<u64>) -> [(f64, f64); table::HISTORY_RETENTION] {
@@ -103,14 +104,20 @@ impl<'a> CLI<'a> {
 
         let selected_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
         let normal_style = Style::default().fg(Color::White);
-        let header = ["Source", "Dest", "State", "Send", "Recv", "Loss"];
+        //let header = ["Source", "Dest", "State", "Send", "Recv", "Loss"];
         let rows = self.overview
             .items
             .iter()
-            .map(|i| Row::StyledData(i.iter(), normal_style));
-        let t = Table::new(header.iter(), rows)
+            .map(|i| Row::new(i.map(|s| s.clone()).iter()).style(normal_style));
+		//let rows = Row::new(Vec::from_iter(self.overview.items.iter()));
+		//	  .map(|s| )
+        let t = Table::new(rows)
+            .header(
+                Row::new(vec!["Source", "Dest", "State", "Send", "Recv", "Loss"])
+                	.style(Style::default().fg(Color::Yellow))
+                	.bottom_margin(1),            
+			)
             .block(Block::default().borders(Borders::ALL).title("TCPtop"))
-            .header_style(Style::default().fg(Color::Red).add_modifier(Modifier::BOLD))
             .highlight_style(selected_style)
             .highlight_symbol(">> ")
             .widths(&[
