@@ -9,7 +9,7 @@ use std::{error::Error, io};
 use termion::{event::Key, input::MouseTerminal, raw::IntoRawMode, screen::AlternateScreen};
 use std::panic::{self, PanicInfo};
 use backtrace::Backtrace;
-use tui::{
+use ratatui::{
     backend::TermionBackend,
     Terminal,
 };
