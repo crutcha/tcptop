@@ -1,7 +1,7 @@
 use crate::tcpdiag::{gather_sockets, DiagWithInode, TCP_STATE, TCPInfo};
 use std::vec::Vec;
 use std::collections::VecDeque;
-use tui::widgets::TableState;
+use ratatui::widgets::TableState;
 use std::collections::HashMap;
 use trust_dns_resolver::Resolver;
 use trust_dns_resolver::config::*;

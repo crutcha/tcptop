@@ -8,8 +8,8 @@ edition = "2018"
 
 [dependencies]
 nell = "0.3.0"
-tui = { version = "0.19", features = ["termion"] }
 termion = "1.5.5"
 rand = "0.7.3"
 trust-dns-resolver = "0.19.5"
 backtrace = "0.3.40"
+ratatui = { version = "0.23.0", features = ["termion"] }

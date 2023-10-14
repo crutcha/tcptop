@@ -1,13 +1,12 @@
 use crate::table;
-use tui::layout::{Constraint, Layout, Direction, Rect};
-use tui::style::{Color, Modifier, Style};
-use tui::widgets::{Row, Table, Block, Borders, Chart, Dataset, Axis, GraphType, Paragraph, Wrap};
-use tui::text::{Spans, Span, Text};
-use tui::terminal::Frame;
-use tui::backend::Backend;
-use tui::symbols;
+use ratatui::layout::{Constraint, Layout, Direction, Rect};
+use ratatui::style::{Color, Modifier, Style};
+use ratatui::widgets::{Row, Table, Block, Borders, Chart, Dataset, Axis, GraphType, Paragraph, Wrap};
+use ratatui::text::{Spans, Span, Text};
+use ratatui::terminal::Frame;
+use ratatui::backend::Backend;
+use ratatui::symbols;
 use std::collections::VecDeque;
-use std::iter::FromIterator;
 
 
 fn vecdequeue_as_chart(rate: &VecDeque<u64>) -> [(f64, f64); table::HISTORY_RETENTION] {
@@ -108,7 +107,7 @@ impl<'a> CLI<'a> {
         let rows = self.overview
             .items
             .iter()
-            .map(|i| Row::new(i.map(|s| s.clone()).iter()).style(normal_style));
+            .map(|i| Row::new(i.iter().map(|s| s.clone())).style(normal_style));
 		//let rows = Row::new(Vec::from_iter(self.overview.items.iter()));
 		//	  .map(|s| )
         let t = Table::new(rows)
